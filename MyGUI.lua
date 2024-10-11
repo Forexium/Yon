@@ -3,6 +3,53 @@ local input = game:GetService("UserInputService")
 local mouse = game:GetService("Players").LocalPlayer:GetMouse()
 local inset = game:GetService("GuiService"):GetGuiInset()
 
+local function CreateDrag(gui)
+    local dragging = false
+    local dragInput
+    local dragStart
+    local startPos
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        gui.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+
+    gui.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = gui.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    gui.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+
+    input.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+end
+
+local function isPlayerOnMobile()
+	return input.TouchEnabled and not input.KeyboardEnabled and not input.MouseEnabled
+end
+
 local function EmptyFunction() end
 
 --//Utils
@@ -451,13 +498,26 @@ do
 			end
 		end))
 		
-		local toggleButton = Instance.new("ImageButton")
-		toggleButton.Size = UDim2.new(0, 50, 0, 50)
-		toggleButton.Position = UDim2.new(0, 10, 0, 10)
-		toggleButton.Image = "rbxassetid://111633956021455"
-		toggleButton.Parent = game:GetService("CoreGui")
+        local ImageButton = Instance.new("ImageButton")
+        local UICorner = Instance.new("UICorner")
+
+        local screenGui = game:GetService("CoreGui"):FindFirstChild("Namessclal")
+        if not screenGui then
+            screenGui = Instance.new("ScreenGui")
+            screenGui.Name = "Namessclal"
+            screenGui.Parent = game:GetService("CoreGui")
+        end
+
+        ImageButton.Parent = screenGui
+        ImageButton.BackgroundColor3 = Color3.new(0, 0, 0)
+        ImageButton.BorderSizePixel = 0
+        ImageButton.Position = UDim2.new(0.654, 0, 0.371, 0)
+        ImageButton.Size = UDim2.new(0, 43, 0, 42)
+        ImageButton.Image = "rbxassetid://111633956021455"
+		UICorner.Parent = ImageButton
+		CreateDrag(ImageButton)
 		
-		toggleButton.MouseButton1Click:Connect(function()
+		ImageButton.MouseButton1Click:Connect(function()
 			if not debounce then
 				debounce = true
 				self:ToggleGUI()
