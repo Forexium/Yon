@@ -101,16 +101,9 @@ local Player = Players.LocalPlayer
 
 task.spawn(function()
     if not UserInputService.TouchEnabled then
-    	return
+        return
     end
-    
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "MobileButton"
-    ScreenGui.IgnoreGuiInset = true
-    ScreenGui.ResetOnSpawn = false
-    ScreenGui.DisplayOrder = 1000
-    ScreenGui.Parent = Player:WaitForChild("PlayerGui")
-    
+
     local Button = Instance.new("TextButton")
     Button.Name = "HelloButton"
     Button.Size = UDim2.fromOffset(40, 40)
@@ -120,57 +113,56 @@ task.spawn(function()
     Button.TextColor3 = Color3.fromRGB(255, 255, 255)
     Button.TextSize = 18
     Button.Font = Enum.Font.GothamBold
-    Button.AutoButtonColor = true
     Button.Parent = ScreenGui
-    
+
     local Corner = Instance.new("UICorner")
     Corner.CornerRadius = UDim.new(1, 0)
     Corner.Parent = Button
-    
+
     local dragging = false
     local dragStart
     local startPos
     local moved = false
     local activeTouch
-    
+
     Button.InputBegan:Connect(function(input)
-    	if input.UserInputType == Enum.UserInputType.Touch then
-    		dragging = true
-    		moved = false
-    		activeTouch = input
-    		dragStart = input.Position
-    		startPos = Button.Position
-    	end
+        if input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            moved = false
+            activeTouch = input
+            dragStart = input.Position
+            startPos = Button.Position
+        end
     end)
-    
+
     UserInputService.InputChanged:Connect(function(input)
-    	if dragging and input == activeTouch then
-    		local delta = input.Position - dragStart
-    
-    		if delta.Magnitude > 8 then
-    			moved = true
-    		end
-    
-    		Button.Position = UDim2.new(
-    			startPos.X.Scale,
-    			startPos.X.Offset + delta.X,
-    			startPos.Y.Scale,
-    			startPos.Y.Offset + delta.Y
-    		)
-    	end
+        if dragging and input == activeTouch then
+            local delta = input.Position - dragStart
+
+            if delta.Magnitude > 8 then
+                moved = true
+            end
+
+            Button.Position = UDim2.new(
+                startPos.X.Scale,
+                startPos.X.Offset + delta.X,
+                startPos.Y.Scale,
+                startPos.Y.Offset + delta.Y
+            )
+        end
     end)
-    
+
     UserInputService.InputEnded:Connect(function(input)
-    	if input == activeTouch then
-    		if not moved then
-    			print("hello")
-    		end
-    
-    		dragging = false
-    		activeTouch = nil
-    	end
+        if input == activeTouch then
+            if not moved then
+                ScreenGui.Enabled = not ScreenGui.Enabled
+            end
+
+            dragging = false
+            activeTouch = nil
+        end
     end)
-    end)
+end)
 
 local Locked = true
 
