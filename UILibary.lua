@@ -113,7 +113,7 @@ task.spawn(function()
     Button.TextColor3 = Color3.fromRGB(255, 255, 255)
     Button.TextSize = 18
     Button.Font = Enum.Font.GothamBold
-    Button.Parent = ScreenGui
+    Button.Parent = gethui()
 
     local Corner = Instance.new("UICorner")
     Corner.CornerRadius = UDim.new(1, 0)
